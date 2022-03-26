@@ -38,18 +38,24 @@ override_dh_auto_build:
 	    -Dcs.replace.properties=replace.properties.tmp \
 	    -Dmaven.repo.local=$(HOME)/.m2/repository -DskipTests=true \
 	     ${ACS_BUILD_OPTS}
-	tar -xf "$(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin.tar.gz" --one-top-level="$(PREDESTDIR)"
+	tar -xf "$(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin.tar.gz" --one-top-level=$(PREDESTDIR)
 override_dh_auto_test:
 
 override_dh_auto_clean:
 	dh_auto_clean
 	rm -f replace.properties.tmp
-
+	rm -rf $(CURDIR)/debian/zookeeper
+#override_dh_install:
+#	mh_installpom -pzookeeper pom.xml
+override_dh_install:
+	mh_installpoms
+	mh_installjar -pzookeeper --java-lib --has-package-version zookeeper-server/pom.xml $(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin/lib/zookeeper-$(VERSION).jar usr/share/java/zookeeper-$(VERSION).jar usr/share/java/zookeeper.jar
+	mh_installjar -pzookeeper-jute --java-lib --has-package-version zookeeper-jute/pom.xml $(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin/lib/zookeeper-jute-$(VERSION).jar
+	dh_install
 override_dh_auto_install:
 	# Common packages
 	mkdir -p $(DESTDIR)/$(SYSCONFDIR)/$(PACKAGE)
 	mkdir -p $(DESTDIR)/$(SYSCONFDIR)/default
-
 	mkdir -p $(DESTDIR)/var/cache/$(PACKAGE)
 	mkdir -p $(DESTDIR)/var/log/$(PACKAGE)
 	mkdir -p $(DESTDIR)/var/lib/$(PACKAGE)
