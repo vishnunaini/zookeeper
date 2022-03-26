@@ -48,9 +48,13 @@ override_dh_auto_clean:
 #override_dh_install:
 #	mh_installpom -pzookeeper pom.xml
 override_dh_install:
-	mh_installpoms
-	mh_installjar -pzookeeper --java-lib --has-package-version zookeeper-server/pom.xml $(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin/lib/zookeeper-$(VERSION).jar usr/share/java/zookeeper-$(VERSION).jar usr/share/java/zookeeper.jar
-	mh_installjar -pzookeeper-jute --java-lib --has-package-version zookeeper-jute/pom.xml $(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin/lib/zookeeper-jute-$(VERSION).jar
+	mh_installpoms -plibzookeeper-java
+	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-server/pom.xml $(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin/lib/zookeeper-$(VERSION).jar usr/share/java/zookeeper-$(VERSION).jar usr/share/java/zookeeper.jar
+	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-jute/pom.xml $(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin/lib/zookeeper-jute-$(VERSION).jar
+	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-metrics-providers/zookeeper-prometheus-metrics/pom.xml $(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin/lib/zookeeper-prometheus-metrics-$(VERSION).jar
+	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-recipes/zookeeper-recipes-election/pom.xml zookeeper-recipes/zookeeper-recipes-election/target/zookeeper-recipes-election-$(VERSION).jar
+	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-recipes/zookeeper-recipes-lock/pom.xml zookeeper-recipes/zookeeper-recipes-lock/target/zookeeper-recipes-lock-$(VERSION).jar
+	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-recipes/zookeeper-recipes-queue/pom.xml zookeeper-recipes/zookeeper-recipes-queue/target/zookeeper-recipes-queue-$(VERSION).jar
 	dh_install
 override_dh_auto_install:
 	# Common packages
