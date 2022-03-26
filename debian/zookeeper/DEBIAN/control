@@ -1,0 +1,10 @@
+Package: zookeeper
+Version: 3.7.0
+Architecture: amd64
+Maintainer: vishnunaini <vishnu@vishnunaini.com>
+Installed-Size: 39
+Section: unknown
+Priority: optional
+Homepage: <insert the upstream URL, if relevant>
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>

@@ -1,0 +1,6 @@
+402dad0e53c5a38bb0fdea56cd43e5fa  usr/share/doc-base/zookeeper.zookeeper
+f77db34b34d1da1a57e1b4392ec63c74  usr/share/doc/zookeeper/README.Debian
+1bf70fa6904dcd4196faf65c22d80c95  usr/share/doc/zookeeper/changelog.gz
+de95b014cb9081920cb01c716546278d  usr/share/doc/zookeeper/copyright
+7ef232a8bb84e58d097ed2fb74310861  usr/share/maven-repo/org/apache/zookeeper/parent/3.7.0/parent-3.7.0.pom
+fcc9f11311086dbf0727effd0a0167a4  usr/share/maven-repo/org/apache/zookeeper/parent/debian/parent-debian.pom
