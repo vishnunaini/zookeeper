@@ -103,3 +103,12 @@ zookeeper-client/zookeeper-client-c/generated/
 
 # Python
 *.py[cod]
+
+#Debian
+debian/.debhelper
+debian/.mh
+debian/tmp
+debian/zookeeper
+debian/libzookeeper-java
+debian/zookeeperd
+
