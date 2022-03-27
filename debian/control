@@ -51,7 +51,7 @@ Build-Depends:
  procps,
  protobuf-compiler,
  python-setuptools,
- libprotoc23,
+ libprotoc-dev,
  libprotobuf-dev,
  python3-all-dev,
 Standards-Version: 4.6.0
