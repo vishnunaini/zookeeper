@@ -47,8 +47,9 @@ override_dh_auto_build:
 	echo "Initiating maven full-build"
 	mvn clean package -Pfull-build \
 	    -Dcs.replace.properties=replace.properties.tmp \
-	    -Dmaven.repo.local=$(CURDIR)/debian/maven-local-repo/ -DskipTests=true \
-	     ${ACS_BUILD_OPTS}
+	    -Dmaven.repo.local=$(CURDIR)/debian/maven-local-repo/ \
+	    -DskipTests=tru -DskipCppUnit=true \
+	    ${ACS_BUILD_OPTS}
 	#Build python bindings
 	echo "Initiating zkpython build"
 	pwd
