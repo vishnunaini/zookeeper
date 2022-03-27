@@ -38,14 +38,30 @@ override_dh_auto_configure:
 	echo VERSION=${VERSION} >> replace.properties.tmp
 
 override_dh_auto_build:
+	mkdir -p debian/maven-local-repo
+	cat debian/maven-settings.xml > debian/maven-local-repo/settings.xml
+	echo "maven repo: Copying debian/maven-settings.xml to debian/maven-local-repo/settings.xml"
+	#Build zookeeper -Pfull-build including the C library
+	echo "Initiating maven full-build"
 	mvn clean package -Pfull-build \
 	    -Dcs.replace.properties=replace.properties.tmp \
-	    -Dmaven.repo.local=$(HOME)/.m2/repository -DskipTests=true \
+	    -Dmaven.repo.local=$(CURDIR)/debian/maven-local-repo/ -DskipTests=true \
 	     ${ACS_BUILD_OPTS}
-#	ant compile
-#	perl Makefile.PL \
-#        --zookeeper-include=../../zookeeper-client/zookeeper-client-c/target/c/include/ \
-#        --zookeeper-lib=../../zookeeper-client/zookeeper-client-c/target/c/lib
+	#Build python bindings
+	echo "Initiating zkpython build"
+	pwd
+	cd zookeeper-contrib/zookeeper-contrib-zkpython/ && ant compile && cd ../../
+	pwd
+	#Build perl bindings
+	echo "Initiating zkperl build"
+	pwd
+	cd zookeeper-contrib/zookeeper-contrib-zkperl/ && perl Makefile.PL \
+        --zookeeper-include=../../zookeeper-client/zookeeper-client-c/target/c/include/ \
+        --zookeeper-lib=../../zookeeper-client/zookeeper-client-c/target/c/lib \
+	&& cd ../../
+	pwd
+	#untar maven built binaries
+	echo "Un-tar maven built binary archives"
 	tar -xf "$(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin.tar.gz" --one-top-level=$(PREDESTDIR)
 	tar -xf "$(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-lib.tar.gz" --one-top-level=$(PREDESTDIR)
 override_dh_auto_test:
@@ -72,7 +88,7 @@ override_dh_install:
 #		sed -e 's/__ARCH__/$(DEB_HOST_MULTIARCH)/g' debian/$$install.install.in \
 #		> debian/$$install.install; \
 #	done
-
+#
 	#dh_install --sourcedir=$(BINDIR)
 	#dh_install --sourcedir=$(LIBDIR)
 	dh_install --package=zookeeper zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/bin/zk*.sh /usr/share/zookeeper/bin/
@@ -88,6 +104,13 @@ override_dh_install:
 	dh_install -plibzookeeper-st-dev zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/lib/libzookeeper_st.so /usr/lib/x86_64-linux-gnu/
 	dh_install -plibzookeeper-st-dev zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/lib/libzookeeper_mt.a /usr/lib/x86_64-linux-gnu/
 	dh_install -plibzookeeper-st-dev zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/lib/libzookeeper_mt.so /usr/lib/x86_64-linux-gnu/
+	#python bindings
+	dh_install -ppython3-zookeeper zookeeper-contrib/zookeeper-contrib-zkpython/target/lib.linux-x86_64-3.10/zookeeper.cpython-* /usr/lib/python3/dist-packages/
+	dh_install -ppython3-zookeeper debian/ZooKeeper-*.egg-info /usr/lib/python3/dist-packages/
+	#perl bindings
+	dh_install -pzookeeper-perl zookeeper-contrib/zookeeper-contrib-zkperl/blib/lib/Net/ZooKeeper.pm /usr/share/perl5/Net/
+	dh_installman -pzookeeper-perl zookeeper-contrib/zookeeper-contrib-zkperl/blib/man3/Net::ZooKeeper.3pm
+	dh_installdocs -plibzookeeper-java-doc --doc-main-package=libzookeeper-java zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/docs/
 
 override_dh_auto_install:
 #	# Common packages

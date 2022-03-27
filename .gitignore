@@ -127,4 +127,14 @@ debian/python3-zookeeper/
 debian/zookeeper-bin.substvars
 debian/zookeeper-bin/
 debian/zookeeperd.substvars
+debian/zookeeper-perl/
+debian/zookeeper-perl.substvars
+zookeeper-contrib/zookeeper-contrib-zkperl/MYMETA.json
+zookeeper-contrib/zookeeper-contrib-zkperl/MYMETA.yml
+zookeeper-contrib/zookeeper-contrib-zkperl/Makefile
+zookeeper-contrib/zookeeper-contrib-zkperl/ZooKeeper.bs
+zookeeper-contrib/zookeeper-contrib-zkperl/ZooKeeper.c
+zookeeper-contrib/zookeeper-contrib-zkperl/ZooKeeper.o
+zookeeper-contrib/zookeeper-contrib-zkperl/blib/
+zookeeper-contrib/zookeeper-contrib-zkperl/pm_to_blib
 
