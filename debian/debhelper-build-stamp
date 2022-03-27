@@ -8,3 +8,4 @@ libzookeeper-mt-dev
 libzookeeper-st2
 libzookeeper-st-dev
 python3-zookeeper
+zookeeper-perl

@@ -111,6 +111,7 @@ override_dh_install:
 	dh_install -pzookeeper-perl zookeeper-contrib/zookeeper-contrib-zkperl/blib/lib/Net/ZooKeeper.pm /usr/share/perl5/Net/
 	dh_installman -pzookeeper-perl zookeeper-contrib/zookeeper-contrib-zkperl/blib/man3/Net::ZooKeeper.3pm
 	dh_installdocs -plibzookeeper-java-doc --doc-main-package=libzookeeper-java zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/docs/
+	dh_installdocs -plibzookeeper-java-doc --doc-main-package=libzookeeper-java debian/libzookeeper-java-doc.doc-base.*
 
 override_dh_auto_install:
 #	# Common packages
