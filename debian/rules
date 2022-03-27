@@ -147,4 +147,4 @@ override_dh_auto_install:
 #	-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH)
 
 override_dh_installsystemd:
-	dh_installsystemd --no-enable --no-stop-on-upgrade --no-start --name=zookeeper
+	dh_installsystemd --no-stop-on-upgrade --name=zookeeper #--no-start --no-enable
