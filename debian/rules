@@ -42,6 +42,10 @@ override_dh_auto_build:
 	    -Dcs.replace.properties=replace.properties.tmp \
 	    -Dmaven.repo.local=$(HOME)/.m2/repository -DskipTests=true \
 	     ${ACS_BUILD_OPTS}
+#	ant compile
+#	perl Makefile.PL \
+#        --zookeeper-include=../../zookeeper-client/zookeeper-client-c/target/c/include/ \
+#        --zookeeper-lib=../../zookeeper-client/zookeeper-client-c/target/c/lib
 	tar -xf "$(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin.tar.gz" --one-top-level=$(PREDESTDIR)
 	tar -xf "$(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-lib.tar.gz" --one-top-level=$(PREDESTDIR)
 override_dh_auto_test:
