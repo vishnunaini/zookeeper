@@ -48,7 +48,7 @@ override_dh_auto_build:
 	mvn clean package -Pfull-build \
 	    -Dcs.replace.properties=replace.properties.tmp \
 	    -Dmaven.repo.local=$(CURDIR)/debian/maven-local-repo/ \
-	    -DskipTests=tru -DskipCppUnit=true \
+	    -DskipTests=true -DskipCppUnit=true \
 	    ${ACS_BUILD_OPTS}
 	#Build python bindings
 	echo "Initiating zkpython build"
@@ -119,7 +119,7 @@ override_dh_install:
 	dh_install -plibzookeeper-st-dev zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/lib/libzookeeper_mt.so /usr/lib/x86_64-linux-gnu/
 	#python bindings
 	dh_python3 -ppython3-zookeeper
-	dh_install -ppython3-zookeeper zookeeper-contrib/zookeeper-contrib-zkpython/target/lib.linux-x86_64-3.10/zookeeper.cpython-* /usr/lib/python3/dist-packages/
+	dh_install -ppython3-zookeeper zookeeper-contrib/zookeeper-contrib-zkpython/target/lib.linux-x86_64-3.*/zookeeper.cpython-* /usr/lib/python3/dist-packages/
 	dh_install -ppython3-zookeeper debian/ZooKeeper-*.egg-info /usr/lib/python3/dist-packages/
 	#perl bindings
 	dh_install -pzookeeper-perl zookeeper-contrib/zookeeper-contrib-zkperl/blib/lib/Net/ZooKeeper.pm /usr/share/perl5/Net/

@@ -51,6 +51,7 @@ Build-Depends:
  procps,
  protobuf-compiler,
  python-setuptools,
+ python-is-python3,
  libprotoc-dev,
  libprotobuf-dev,
  python3-all-dev,
