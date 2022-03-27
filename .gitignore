@@ -111,4 +111,20 @@ debian/tmp
 debian/zookeeper
 debian/libzookeeper-java
 debian/zookeeperd
+debian/libzookeeper-java-doc.substvars
+debian/libzookeeper-java-doc/
+debian/libzookeeper-java.substvars
+debian/libzookeeper-mt-dev.substvars
+debian/libzookeeper-mt-dev/
+debian/libzookeeper-mt2.substvars
+debian/libzookeeper-mt2/
+debian/libzookeeper-st-dev.substvars
+debian/libzookeeper-st-dev/
+debian/libzookeeper-st2.substvars
+debian/libzookeeper-st2/
+debian/python3-zookeeper.substvars
+debian/python3-zookeeper/
+debian/zookeeper-bin.substvars
+debian/zookeeper-bin/
+debian/zookeeperd.substvars
 

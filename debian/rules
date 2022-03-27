@@ -11,10 +11,14 @@ DEB_UPSTREAM_VERSION=$(shell dpkg-parsechangelog | sed -rne 's,^Version: ([^+]+)
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 DEB_CHANGELOG_DATETIME = $(shell dpkg-parsechangelog --show-field Date)
 
+#LD_LIBRARY_PATH := /usr/lib
+
 export DH_VERBOSE = 1
 
 PREDESTDIR = "$(CURDIR)/zookeeper-assembly/target/"
-DESTDIR = "$(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin/"
+BINDIR = "$(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin/"
+LIBDIR = "$(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-lib/"
+DEB_DESTDIR= "$(CURDIR)/debian-build"
 
 # see FEATURE AREAS in dpkg-buildflags(1)
 #export DEB_BUILD_MAINT_OPTIONS = hardening=+all
@@ -34,17 +38,19 @@ override_dh_auto_configure:
 	echo VERSION=${VERSION} >> replace.properties.tmp
 
 override_dh_auto_build:
-	mvn clean package \
+	mvn clean package -Pfull-build \
 	    -Dcs.replace.properties=replace.properties.tmp \
 	    -Dmaven.repo.local=$(HOME)/.m2/repository -DskipTests=true \
 	     ${ACS_BUILD_OPTS}
 	tar -xf "$(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin.tar.gz" --one-top-level=$(PREDESTDIR)
+	tar -xf "$(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-lib.tar.gz" --one-top-level=$(PREDESTDIR)
 override_dh_auto_test:
 
 override_dh_auto_clean:
 	dh_auto_clean
 	rm -f replace.properties.tmp
 	rm -rf $(CURDIR)/debian/zookeeper
+	rm -rf $(DEB_DESTDIR)
 #override_dh_install:
 #	mh_installpom -pzookeeper pom.xml
 override_dh_install:
@@ -55,16 +61,41 @@ override_dh_install:
 	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-recipes/zookeeper-recipes-election/pom.xml zookeeper-recipes/zookeeper-recipes-election/target/zookeeper-recipes-election-$(VERSION).jar
 	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-recipes/zookeeper-recipes-lock/pom.xml zookeeper-recipes/zookeeper-recipes-lock/target/zookeeper-recipes-lock-$(VERSION).jar
 	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-recipes/zookeeper-recipes-queue/pom.xml zookeeper-recipes/zookeeper-recipes-queue/target/zookeeper-recipes-queue-$(VERSION).jar
-	dh_install
+
+        # Generate install files for Multiarch capability
+#	for install in libzookeeper-mt2 libzookeeper-st2 \
+#		libzookeeper-st-dev libzookeeper-mt-dev; do \
+#		sed -e 's/__ARCH__/$(DEB_HOST_MULTIARCH)/g' debian/$$install.install.in \
+#		> debian/$$install.install; \
+#	done
+
+	#dh_install --sourcedir=$(BINDIR)
+	#dh_install --sourcedir=$(LIBDIR)
+	dh_install --package=zookeeper zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/bin/zk*.sh /usr/share/zookeeper/bin/
+	dh_install --package=zookeeper zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/conf/* /etc/zookeeper/conf-example/
+	dh_install -pzookeeper-bin zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/bin/* /usr/lib/zookeeper/bin/
+	dh_install -plibzookeeper-st2 zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/lib/libzookeeper_st.so.2.0.0 /usr/lib/x86_64-linux-gnu/
+	dh_link -plibzookeeper-st2 /usr/lib/x86_64-linux-gnu/libzookeeper_st.so.2.0.0 usr/lib/x86_64-linux-gnu/libzookeeper_st.so.2
+	dh_install -plibzookeeper-mt2 zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/lib/libzookeeper_mt.so.2.0.0 /usr/lib/x86_64-linux-gnu/
+	dh_link -plibzookeeper-mt2 /usr/lib/x86_64-linux-gnu/libzookeeper_mt.so.2.0.0 usr/lib/x86_64-linux-gnu/libzookeeper_mt.so.2
+	dh_install -plibzookeeper-st-dev zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/include/zookeeper/* /usr/include/zookeeper/
+	dh_install -plibzookeeper-mt-dev zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/include/zookeeper/* /usr/include/zookeeper/
+	dh_install -plibzookeeper-st-dev zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/lib/libzookeeper_st.a /usr/lib/x86_64-linux-gnu/
+	dh_install -plibzookeeper-st-dev zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/lib/libzookeeper_st.so /usr/lib/x86_64-linux-gnu/
+	dh_install -plibzookeeper-st-dev zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/lib/libzookeeper_mt.a /usr/lib/x86_64-linux-gnu/
+	dh_install -plibzookeeper-st-dev zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/lib/libzookeeper_mt.so /usr/lib/x86_64-linux-gnu/
+
 override_dh_auto_install:
-	# Common packages
-	mkdir -p $(DESTDIR)/$(SYSCONFDIR)/$(PACKAGE)
-	mkdir -p $(DESTDIR)/$(SYSCONFDIR)/default
-	mkdir -p $(DESTDIR)/var/cache/$(PACKAGE)
-	mkdir -p $(DESTDIR)/var/log/$(PACKAGE)
-	mkdir -p $(DESTDIR)/var/lib/$(PACKAGE)
-	mkdir -p $(DESTDIR)/usr/bin
-	mkdir -p $(DESTDIR)/usr/share
+#	# Common packages
+#	mkdir -p $(DESTDIR)/$(SYSCONFDIR)/$(PACKAGE)
+#	mkdir -p $(DESTDIR)/$(SYSCONFDIR)/default
+#	mkdir -p $(DESTDIR)/var/cache/$(PACKAGE)
+#	mkdir -p $(DESTDIR)/var/log/$(PACKAGE)
+#	mkdir -p $(DESTDIR)/var/lib/$(PACKAGE)
+#	mkdir -p $(DESTDIR)/usr/bin
+#	mkdir -p $(DESTDIR)/usr/share
+#
+
 
 # dh_make generated override targets
 # This is example for Cmake (See https://bugs.debian.org/641051 )
