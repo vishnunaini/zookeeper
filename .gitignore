@@ -129,6 +129,9 @@ debian/zookeeper-bin/
 debian/zookeeperd.substvars
 debian/zookeeper-perl/
 debian/zookeeper-perl.substvars
+debian/libzookeeper-dependencies-java.substvars
+debian/libzookeeper-dependencies-java/
+debian/maven-local-repo/
 zookeeper-contrib/zookeeper-contrib-zkperl/MYMETA.json
 zookeeper-contrib/zookeeper-contrib-zkperl/MYMETA.yml
 zookeeper-contrib/zookeeper-contrib-zkperl/Makefile

@@ -20,6 +20,8 @@ BINDIR = "$(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin/"
 LIBDIR = "$(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-lib/"
 DEB_DESTDIR= "$(CURDIR)/debian-build"
 
+JARDIR = "$(BINDIR)/lib"
+
 # see FEATURE AREAS in dpkg-buildflags(1)
 #export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
@@ -60,6 +62,11 @@ override_dh_auto_build:
         --zookeeper-lib=../../zookeeper-client/zookeeper-client-c/target/c/lib \
 	&& cd ../../
 	pwd
+	# Compile zktreeutil and generate man page
+	#cd zookeeper-contrib/zookeeper-contrib-zktreeutil && autoreconf -if && ./configure --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) && make
+	#LD_LIBRARY_PATH=src/c/.libs help2man -N --version-string=0.0 src/contrib/zktreeutil/src/zktreeutil >zktreeutil.man
+
+
 	#untar maven built binaries
 	echo "Un-tar maven built binary archives"
 	tar -xf "$(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin.tar.gz" --one-top-level=$(PREDESTDIR)
@@ -74,13 +81,17 @@ override_dh_auto_clean:
 #override_dh_install:
 #	mh_installpom -pzookeeper pom.xml
 override_dh_install:
+	#Install poms for libzookeeper-java
 	mh_installpoms -plibzookeeper-java
-	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-server/pom.xml $(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin/lib/zookeeper-$(VERSION).jar usr/share/java/zookeeper-$(VERSION).jar usr/share/java/zookeeper.jar
+	#Install jars for libzookeeper-java
+	mh_installjar -plibzookeeper-java --java-lib --has-package-version --no-parent zookeeper-server/pom.xml $(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin/lib/zookeeper-$(VERSION).jar usr/share/java/zookeeper-$(VERSION).jar usr/share/java/zookeeper.jar
 	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-jute/pom.xml $(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin/lib/zookeeper-jute-$(VERSION).jar
 	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-metrics-providers/zookeeper-prometheus-metrics/pom.xml $(PREDESTDIR)/apache-$(PACKAGE)-$(VERSION)-bin/lib/zookeeper-prometheus-metrics-$(VERSION).jar
 	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-recipes/zookeeper-recipes-election/pom.xml zookeeper-recipes/zookeeper-recipes-election/target/zookeeper-recipes-election-$(VERSION).jar
 	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-recipes/zookeeper-recipes-lock/pom.xml zookeeper-recipes/zookeeper-recipes-lock/target/zookeeper-recipes-lock-$(VERSION).jar
 	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-recipes/zookeeper-recipes-queue/pom.xml zookeeper-recipes/zookeeper-recipes-queue/target/zookeeper-recipes-queue-$(VERSION).jar
+	dh_install --exclude="zookeeper.jar" --exclude="zookeeper-$(VERSION).jar" --exclude="zookeeper-jute" --exclude="zookeeper-recipes" --exclude="zookeeper-prometheus-metrics"  -plibzookeeper-dependencies-java zookeeper-assembly/target/apache-$(PACKAGE)-$(VERSION)-bin/lib/*.jar usr/share/java/ 
+
 
         # Generate install files for Multiarch capability
 #	for install in libzookeeper-mt2 libzookeeper-st2 \
@@ -91,6 +102,7 @@ override_dh_install:
 #
 	#dh_install --sourcedir=$(BINDIR)
 	#dh_install --sourcedir=$(LIBDIR)
+	#C bindings and headers
 	dh_install --package=zookeeper zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/bin/zk*.sh /usr/share/zookeeper/bin/
 	dh_install --package=zookeeper zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/conf/* /etc/zookeeper/conf-example/
 	dh_install -pzookeeper-bin zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/bin/* /usr/lib/zookeeper/bin/
@@ -105,13 +117,16 @@ override_dh_install:
 	dh_install -plibzookeeper-st-dev zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/lib/libzookeeper_mt.a /usr/lib/x86_64-linux-gnu/
 	dh_install -plibzookeeper-st-dev zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/lib/libzookeeper_mt.so /usr/lib/x86_64-linux-gnu/
 	#python bindings
+	dh_python3 -ppython3-zookeeper
 	dh_install -ppython3-zookeeper zookeeper-contrib/zookeeper-contrib-zkpython/target/lib.linux-x86_64-3.10/zookeeper.cpython-* /usr/lib/python3/dist-packages/
 	dh_install -ppython3-zookeeper debian/ZooKeeper-*.egg-info /usr/lib/python3/dist-packages/
 	#perl bindings
 	dh_install -pzookeeper-perl zookeeper-contrib/zookeeper-contrib-zkperl/blib/lib/Net/ZooKeeper.pm /usr/share/perl5/Net/
 	dh_installman -pzookeeper-perl zookeeper-contrib/zookeeper-contrib-zkperl/blib/man3/Net::ZooKeeper.3pm
+	#libzookeeper-java-doc
 	dh_installdocs -plibzookeeper-java-doc --doc-main-package=libzookeeper-java zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/docs/
 	dh_installdocs -plibzookeeper-java-doc --doc-main-package=libzookeeper-java debian/libzookeeper-java-doc.doc-base.*
+
 
 override_dh_auto_install:
 #	# Common packages

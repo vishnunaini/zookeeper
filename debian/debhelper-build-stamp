@@ -1,6 +1,7 @@
 zookeeper
 libzookeeper-java
 libzookeeper-java-doc
+libzookeeper-dependencies-java
 zookeeperd
 zookeeper-bin
 libzookeeper-mt2

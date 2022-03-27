@@ -27,6 +27,12 @@ Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: <insert up to 60 chars description>
  <insert long description, indented with spaces>
 
+Package: libzookeeper-dependencies-java
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>
+
 Package: zookeeperd
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
