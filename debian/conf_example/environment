@@ -1,4 +1,4 @@
-ZOOMAIN=org.apache.zookeeper.server.quorum.QuorumPeerMain
+ZOOMAIN=
 ZOOCFGDIR=/etc/zookeeper/conf
 ZOOCFG=/etc/zookeeper/conf/zoo.cfg
 ZOO_LOG_DIR=/var/log/zookeeper
