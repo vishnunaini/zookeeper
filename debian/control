@@ -27,6 +27,7 @@ Build-Depends:
  libapacheds-java,
  libboost-dev,
  libcppunit-dev,
+ libcommons-cli-java,
  libcommons-collections3-java,
  libcommons-io-java,
  libjline-java,
@@ -61,6 +62,30 @@ Homepage: https://github.com/vishnunaini/zookeeper
 #Vcs-Git: https://salsa.debian.org/debian/zookeeper.git
 Rules-Requires-Root: no
 
+Package: libzookeeper-dependencies-java
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Critical Java JAR dependencies for this version of zookeeper
+ This package contains essential Java JAR dependencies for this version of
+ zookeeper that are not available in the debian package management repo
+ and separately packaging them is not efficient due to Apache Maven's 
+ explicit version dependency policy
+
+Package: libzookeeper-java
+Architecture: any
+Depends:
+ libzookeeper-dependencies-java (= ${binary:Version}),
+ ${shlibs:Depends},
+ ${misc:Depends}
+Suggests: libzookeeper-java-doc
+Description: Core Java libraries for zookeeper
+ ZooKeeper is a centralized, reliable, service for maintaining configuration
+ information, naming, providing distributed synchronization, and group
+ services. All of these kinds of services are used in some form or another by
+ distributed applications.
+ .
+ This package contains the java .jar files.
+
 Package: zookeeper
 Architecture: any
 Depends: 
@@ -80,35 +105,11 @@ Description: High-performance coordination service for distributed applications
  not automatically start up the service. The example configuration is installed
  with the update-alternatives mechanism.
 
-Package: libzookeeper-java
-Architecture: any
-Depends:
- libzookeeper-dependencies-java (= ${binary:Version}),
- ${shlibs:Depends},
- ${misc:Depends}
-Suggests: libzookeeper-java-doc
-Description: Core Java libraries for zookeeper
- ZooKeeper is a centralized, reliable, service for maintaining configuration
- information, naming, providing distributed synchronization, and group
- services. All of these kinds of services are used in some form or another by
- distributed applications.
- .
- This package contains the java .jar files.
-
-Package: libzookeeper-dependencies-java
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Critical Java JAR dependencies for this version of zookeeper
- This package contains essential Java JAR dependencies for this version of
- zookeeper that are not available in the debian package management repo
- and separately packaging them is not efficient due to Apache Maven's 
- explicit version dependency policy
-
 Package: zookeeperd
 Architecture: any
+Pre-Depends: ${misc:Pre-Depends}, zookeeper (= ${binary:Version})
 Depends: 
  lsb-base (>= 3.2-14),
- zookeeper (= ${binary:Version}),
  ${misc:Depends},
  ${shlibs:Depends}
 Description: SystemD service unit files for zookeeper
@@ -119,22 +120,6 @@ Description: SystemD service unit files for zookeeper
  .
  This package contains SystemD service unit files for zookeeper to start and stop zookeeper and starts
  zookeeper on installation.
-
-Package: zookeeper-bin
-Architecture: any
-Depends:
- libzookeeper-mt2 (= ${binary:Version}),
- ${misc:Depends},
- ${shlibs:Depends}
-Description: Command line utilities for zookeeper
- ZooKeeper is a centralized, reliable, service for maintaining configuration
- information, naming, providing distributed synchronization, and group
- services. All of these kinds of services are used in some form or another by
- distributed applications.
- .
- This package contains additional zookeeper command line utilities using the C
- binding. See the "zookeeper" package for command line utilities using the java
- binding.
 
 Package: libzookeeper-java-doc
 Section: doc
@@ -160,6 +145,20 @@ Description: Multi threaded C bindings for zookeeper
  .
  This package contains the multi-threaded libraries for the C bindings.
 
+Package: libzookeeper-st2
+Architecture: any
+Section: libs
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: Single threaded C bindings for zookeeper
+ ZooKeeper is a centralized, reliable, service for maintaining configuration
+ information, naming, providing distributed synchronization, and group
+ services. All of these kinds of services are used in some form or another by
+ distributed applications.
+ .
+ This package contains the single-threaded libraries for the C bindings.
+
 Package: libzookeeper-mt-dev
 Architecture: any
 Section: libdevel
@@ -178,20 +177,6 @@ Description: Development files for multi threaded zookeeper C bindings
  .
  This package contains the development files for the multi threaded C bindings.
 
-Package: libzookeeper-st2
-Architecture: any
-Section: libs
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: ${misc:Depends}, ${shlibs:Depends}
-Description: Single threaded C bindings for zookeeper
- ZooKeeper is a centralized, reliable, service for maintaining configuration
- information, naming, providing distributed synchronization, and group
- services. All of these kinds of services are used in some form or another by
- distributed applications.
- .
- This package contains the single-threaded libraries for the C bindings.
-
 Package: libzookeeper-st-dev
 Architecture: any
 Section: libdevel
@@ -209,6 +194,22 @@ Description: Development files for single threaded zookeeper C bindings
  distributed applications.
  .
  This package contains the development files for the single threaded C bindings.
+
+Package: zookeeper-bin
+Architecture: any
+Depends:
+ libzookeeper-mt2 (= ${binary:Version}),
+ ${misc:Depends},
+ ${shlibs:Depends}
+Description: Command line utilities for zookeeper
+ ZooKeeper is a centralized, reliable, service for maintaining configuration
+ information, naming, providing distributed synchronization, and group
+ services. All of these kinds of services are used in some form or another by
+ distributed applications.
+ .
+ This package contains additional zookeeper command line utilities using the C
+ binding. See the "zookeeper" package for command line utilities using the java
+ binding.
 
 Package: python3-zookeeper
 Architecture: any

@@ -91,7 +91,7 @@ override_dh_install:
 	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-recipes/zookeeper-recipes-election/pom.xml zookeeper-recipes/zookeeper-recipes-election/target/zookeeper-recipes-election-$(VERSION).jar
 	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-recipes/zookeeper-recipes-lock/pom.xml zookeeper-recipes/zookeeper-recipes-lock/target/zookeeper-recipes-lock-$(VERSION).jar
 	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-recipes/zookeeper-recipes-queue/pom.xml zookeeper-recipes/zookeeper-recipes-queue/target/zookeeper-recipes-queue-$(VERSION).jar
-	dh_install --exclude="zookeeper.jar" --exclude="zookeeper-$(VERSION).jar" --exclude="zookeeper-jute" --exclude="zookeeper-recipes" --exclude="zookeeper-prometheus-metrics"  -plibzookeeper-dependencies-java zookeeper-assembly/target/apache-$(PACKAGE)-$(VERSION)-bin/lib/*.jar usr/share/java/ 
+	dh_install --exclude="commons-cli-1.4.jar" --exclude="zookeeper.jar" --exclude="zookeeper-$(VERSION).jar" --exclude="zookeeper-jute" --exclude="zookeeper-recipes" --exclude="zookeeper-prometheus-metrics"  -plibzookeeper-dependencies-java zookeeper-assembly/target/apache-$(PACKAGE)-$(VERSION)-bin/lib/*.jar usr/share/java/
 
 
         # Generate install files for Multiarch capability
