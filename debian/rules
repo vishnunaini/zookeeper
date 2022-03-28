@@ -96,6 +96,10 @@ override_dh_install:
 	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-recipes/zookeeper-recipes-election/pom.xml zookeeper-recipes/zookeeper-recipes-election/target/zookeeper-recipes-election-$(VERSION).jar
 	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-recipes/zookeeper-recipes-lock/pom.xml zookeeper-recipes/zookeeper-recipes-lock/target/zookeeper-recipes-lock-$(VERSION).jar
 	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-recipes/zookeeper-recipes-queue/pom.xml zookeeper-recipes/zookeeper-recipes-queue/target/zookeeper-recipes-queue-$(VERSION).jar
+	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-contrib/zookeeper-contrib-zooinspector/pom.xml zookeeper-contrib/zookeeper-contrib-zooinspector/target/zookeeper-contrib-zooinspector-$(VERSION).jar 
+	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-contrib/zookeeper-contrib-zooinspector/pom.xml zookeeper-contrib/zookeeper-contrib-zooinspector/target/zookeeper-contrib-zooinspector-$(VERSION)-jar-with-dependencies.jar --dest-jar=/usr/share/zookeeper/zooinspector/zookeeper-contrib-zooinspector-$(VERSION)-jar-with-dependencies.jar
+	dh_link -plibzookeeper-java /usr/share/zookeeper/zookeeper-zooinspector.jar /usr/share/zookeeper/zooinspector/zookeeper-contrib-zooinspector-$(VERSION)-jar-with-dependencies.jar
+	mh_installjar -plibzookeeper-java --java-lib --has-package-version zookeeper-contrib/zookeeper-contrib-zooinspector/pom.xml zookeeper-contrib/zookeeper-contrib-zooinspector/target/zookeeper-contrib-zooinspector-$(VERSION).jar 
 	dh_install --exclude="commons-cli-1.4.jar" --exclude="zookeeper.jar" --exclude="zookeeper-$(VERSION).jar" --exclude="zookeeper-jute" --exclude="zookeeper-recipes" --exclude="zookeeper-prometheus-metrics"  -plibzookeeper-dependencies-java zookeeper-assembly/target/apache-$(PACKAGE)-$(VERSION)-bin/lib/*.jar usr/share/java/
 
 
@@ -132,6 +136,7 @@ override_dh_install:
 	#libzookeeper-java-doc
 	dh_installdocs -plibzookeeper-java-doc --doc-main-package=libzookeeper-java zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/docs/
 	dh_installdocs -plibzookeeper-java-doc --doc-main-package=libzookeeper-java debian/libzookeeper-java-doc.doc-base.*
+	dh_installdirs
 
 
 override_dh_auto_install:
