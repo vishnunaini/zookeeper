@@ -97,15 +97,6 @@ then
     ZOOCFG="$2"
 fi
 
-if $cygwin
-then
-    ZOOCFG=`cygpath -wp "$ZOOCFG"`
-    # cygwin has a "kill" in the shell itself, gets confused
-    KILL=/bin/kill
-else
-    KILL=kill
-fi
-
 echo "Using config: $ZOOCFG" >&2
 
 case "$OSTYPE" in
