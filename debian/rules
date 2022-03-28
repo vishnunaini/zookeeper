@@ -83,6 +83,10 @@ override_dh_auto_clean:
 	dh_auto_clean
 	rm -f replace.properties.tmp
 	rm -rf $(CURDIR)/debian/zookeeper
+	rm -rf $(CURDIR)/debian/libzookeeper-java
+	rm -rf $(CURDIR)/debian/libzookeeper-java-doc
+	rm -rf $(CURDIR)/debian/python3-zookeeper
+	rm -rf $(CURDIR)/debian/zookeeper-bin
 	rm -rf $(DEB_DESTDIR)
 #override_dh_install:
 #	mh_installpom -pzookeeper pom.xml
@@ -114,7 +118,7 @@ override_dh_install:
 	#dh_install --sourcedir=$(LIBDIR)
 	#C bindings and headers
 	dh_install --package=zookeeper zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/bin/zk*.sh /usr/share/zookeeper/bin/
-	dh_install --package=zookeeper zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/conf/* /etc/zookeeper/conf-example/
+	dh_install --package=zookeeper zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/conf/* /etc/zookeeper/conf_upstream_example/
 	dh_install -pzookeeper-bin zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/bin/* /usr/lib/zookeeper/bin/
 	dh_install -plibzookeeper-st2 zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/lib/libzookeeper_st.so.2.0.0 /usr/lib/x86_64-linux-gnu/
 	dh_link -plibzookeeper-st2 /usr/lib/x86_64-linux-gnu/libzookeeper_st.so.2.0.0 usr/lib/x86_64-linux-gnu/libzookeeper_st.so.2
@@ -136,7 +140,7 @@ override_dh_install:
 	#libzookeeper-java-doc
 	dh_installdocs -plibzookeeper-java-doc --doc-main-package=libzookeeper-java zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/docs/
 	dh_installdocs -plibzookeeper-java-doc --doc-main-package=libzookeeper-java debian/libzookeeper-java-doc.doc-base.*
-	dh_installdirs
+	dh_installdirs -pzookeeper --sourcedir=debian/conf-example /etc/zookeeper
 
 
 override_dh_auto_install:

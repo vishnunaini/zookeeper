@@ -9,7 +9,6 @@ Build-Depends:
  ant-contrib,
  autoconf,
  automake,
- cdbs,
  cmake,
  cpputest,
  default-jdk (>= 2:1.6),
