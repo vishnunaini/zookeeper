@@ -62,6 +62,25 @@ Homepage: https://github.com/vishnunaini/zookeeper
 #Vcs-Git: https://salsa.debian.org/debian/zookeeper.git
 Rules-Requires-Root: no
 
+Package: zookeeper
+Architecture: any
+Depends: 
+ adduser,
+ libzookeeper-java (= ${binary:Version}),
+ libzookeeper-dependencies-java (= ${binary:Version}),
+ default-jre-headless | java6-runtime-headless,
+ ${shlibs:Depends},
+ ${misc:Depends}
+Description: High-performance coordination service for distributed applications
+ ZooKeeper is a centralized, reliable, service for maintaining configuration
+ information, naming, providing distributed synchronization, and group
+ services. All of these kinds of services are used in some form or another by
+ distributed applications.
+ .
+ This package contains the shell scripts and an example configuration but does
+ not automatically start up the service. The example configuration is installed
+ with the update-alternatives mechanism.
+
 Package: libzookeeper-dependencies-java
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
@@ -85,25 +104,6 @@ Description: Core Java libraries for zookeeper
  distributed applications.
  .
  This package contains the java .jar files.
-
-Package: zookeeper
-Architecture: any
-Depends: 
- adduser,
- libzookeeper-java (= ${binary:Version}),
- libzookeeper-dependencies-java (= ${binary:Version}),
- default-jre-headless | java6-runtime-headless,
- ${shlibs:Depends},
- ${misc:Depends}
-Description: High-performance coordination service for distributed applications
- ZooKeeper is a centralized, reliable, service for maintaining configuration
- information, naming, providing distributed synchronization, and group
- services. All of these kinds of services are used in some form or another by
- distributed applications.
- .
- This package contains the shell scripts and an example configuration but does
- not automatically start up the service. The example configuration is installed
- with the update-alternatives mechanism.
 
 Package: zookeeperd
 Architecture: any

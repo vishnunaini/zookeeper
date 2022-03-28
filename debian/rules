@@ -30,7 +30,12 @@ JARDIR = "$(BINDIR)/lib"
 #export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
 # package maintainers to append LDFLAGS
 #export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
 export JAVA_HOME=/usr/lib/jvm/default-java
+
+
+#Proxy
+#export ANT_PROXY_OPTS="-Dhttp.proxyHost= -Dhttp.proxyPort= -Dhttps.proxyHost= -Dhttps.proxyPort= "
 
 %:
 	dh $@ --with javahelper,maven_repo_helper --with python3
@@ -49,7 +54,7 @@ override_dh_auto_build:
 	    -Dcs.replace.properties=replace.properties.tmp \
 	    -Dmaven.repo.local=$(CURDIR)/debian/maven-local-repo/ \
 	    -DskipTests=true -DskipCppUnit=true \
-	    ${ACS_BUILD_OPTS}
+	    ${ANT_PROXY_OPTS}
 	#Build python bindings
 	echo "Initiating zkpython build"
 	pwd
