@@ -26,6 +26,8 @@ if ! getent passwd $USER >/dev/null ; then
           $USER  >/dev/null
 fi
 
+mkdir -p /var/lib/$NAME
+mkdir -p /var/log/$NAME
 chown $USER:$GROUP /var/log/$NAME
 chown $USER:$GROUP /var/lib/$NAME
 chmod o-rwx /var/lib/$NAME

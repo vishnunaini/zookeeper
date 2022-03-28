@@ -1,0 +1,2 @@
+debian/conf_example /etc/zookeeper/
+debian/zooinspector /usr/bin
