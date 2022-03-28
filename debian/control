@@ -63,6 +63,8 @@ Rules-Requires-Root: no
 
 Package: zookeeper
 Architecture: any
+Replaces: zookeeperd
+Provides: zookeeperd
 Depends: 
  adduser,
  libzookeeper-java (= ${binary:Version}),
@@ -103,22 +105,6 @@ Description: Core Java libraries for zookeeper
  distributed applications.
  .
  This package contains the java .jar files.
-
-Package: zookeeperd
-Architecture: any
-Pre-Depends: ${misc:Pre-Depends}, zookeeper (= ${binary:Version})
-Depends: 
- lsb-base (>= 3.2-14),
- ${misc:Depends},
- ${shlibs:Depends}
-Description: SystemD service unit files for zookeeper
- ZooKeeper is a centralized, reliable, service for maintaining configuration
- information, naming, providing distributed synchronization, and group
- services. All of these kinds of services are used in some form or another by
- distributed applications.
- .
- This package contains SystemD service unit files for zookeeper to start and stop zookeeper and starts
- zookeeper on installation.
 
 Package: libzookeeper-java-doc
 Section: doc

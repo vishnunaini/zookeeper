@@ -207,7 +207,7 @@ stop)
     then
       echo "no zookeeper to stop (could not find file $ZOOPIDFILE)"
     else
-      $KILL $(cat "$ZOOPIDFILE")
+      kill -9 $(cat "$ZOOPIDFILE")
       rm "$ZOOPIDFILE"
       sleep 1
       echo STOPPED

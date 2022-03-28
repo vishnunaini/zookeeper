@@ -130,7 +130,7 @@ override_dh_install:
 	dh_install -plibzookeeper-st-dev zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/lib/libzookeeper_mt.a /usr/lib/x86_64-linux-gnu/
 	dh_install -plibzookeeper-st-dev zookeeper-assembly/target/apache-zookeeper-$(VERSION)-lib/usr/lib/libzookeeper_mt.so /usr/lib/x86_64-linux-gnu/
 	#python bindings
-	dh_python3 -ppython3-zookeeper
+	dh_python3 -ppython3-zookeeper 
 	dh_install -ppython3-zookeeper zookeeper-contrib/zookeeper-contrib-zkpython/target/lib.linux-x86_64-3.*/zookeeper.cpython-* /usr/lib/python3/dist-packages/
 	dh_install -ppython3-zookeeper debian/ZooKeeper-*.egg-info /usr/lib/python3/dist-packages/
 	#perl bindings
@@ -141,9 +141,8 @@ override_dh_install:
 	dh_installdocs -plibzookeeper-java-doc --doc-main-package=libzookeeper-java debian/libzookeeper-java-doc.doc-base.*
 	#Install conf to /etc/zookeeper/conf_example while update-alternatives will provide /etc/zookeeper/conf
 	dh_install --package=zookeeper zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/conf/* /etc/zookeeper/conf_example/
+	cp zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/conf/zoo_sample.cfg debian/conf_example/zoo.cfg 
 	dh_install -pzookeeper debian/conf_example/* /etc/zookeeper/conf_example/
-	dh_install --package=zookeeper zookeeper-assembly/target/apache-zookeeper-$(VERSION)-bin/conf/zoo_sample.cfg /etc/zookeeper/conf_example/zoo.cfg
-
 
 override_dh_auto_install:
 #	# Common packages
@@ -164,5 +163,6 @@ override_dh_auto_install:
 #	-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH)
 
 override_dh_installsystemd:
-	dh_installsystemd --no-stop-on-upgrade --name=zookeeper debian/zookeeperd.zookeeper.service
+	dh_installsystemd --package=zookeeper --no-stop-on-upgrade zookeeper.service
+#	dh_installsystemd -pzookeeperd --no-stop-on-upgrade debian/zookeeperd.zookeeper.service
 	#--no-start --no-enable
